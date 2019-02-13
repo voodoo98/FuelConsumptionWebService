@@ -10,7 +10,7 @@ repositories {
     jcenter()
 }
 
-def warName = 'court-web-service.war'
+def warName = 'fuel-web-service.war'
 def JBOSS_HOME = System.getenv("JBOSS_HOME")
 def JACKSON_VERSION = '2.9.8'
 
@@ -24,12 +24,12 @@ ear {
     includeEmptyDirs = false
 
     deploymentDescriptor {
-      webModule(warName, '/courtservice')
+      webModule(warName, '/fuelservice')
     }
 }
 
 task deployToJboss(type: Copy) {
-    from 'build/libs/CourtWebService.ear'
+    from 'build/libs/FuelWebService.ear'
     into JBOSS_HOME + '/standalone/deployments'
 }
 
