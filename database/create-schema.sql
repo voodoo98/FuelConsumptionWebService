@@ -1,0 +1,33 @@
+CREATE TABLE cars (
+    id serial PRIMARY KEY NOT NULL,
+    plate TEXT,
+    type TEXT,
+    color TEXT
+);
+
+CREATE TABLE gasstations (
+    id serial PRIMARY KEY NOT NULL,
+    lat DOUBLE PRECISION,
+    lng DOUBLE PRECISION,
+    name TEXT,
+    address TEXT
+);
+
+CREATE TABLE fuels (
+    id serial PRIMARY KEY NOT NULL,	
+    quantity DOUBLE PRECISION, 
+    distance DOUBLE PRECISION, 
+    price DOUBLE PRECISION, 
+    car_id INTEGER NOT NULL,
+    gs_id INTEGER NOT NULL,
+    fuel_date TIMESTAMP NOT NULL,
+	CONSTRAINT FK_CAR_ID FOREIGN KEY (car_id)
+	  REFERENCES cars (id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT FK_GS_ID FOREIGN KEY (gs_id)
+	 REFERENCES gasstations (id) MATCH SIMPLE ON UPDATE RESTRICT ON DELETE RESTRICT
+
+);
+
+ALTER TABLE cars OWNER TO postgres;
+ALTER TABLE gasstations OWNER TO postgres;
+ALTER TABLE fuels OWNER TO postgres;

@@ -1,0 +1,63 @@
+plugins {
+    id 'eclipse'
+    id 'war'
+    id 'ear'
+    id "net.ltgt.apt-eclipse" version "0.20"
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+def warName = 'court-web-service.war'
+def JBOSS_HOME = System.getenv("JBOSS_HOME")
+def JACKSON_VERSION = '2.9.8'
+
+war {
+  archiveName = warName
+}
+
+ear {
+    from war.outputs.files
+    excludes += ['**/*.class', '**/logback.xml']
+    includeEmptyDirs = false
+
+    deploymentDescriptor {
+      webModule(warName, '/courtservice')
+    }
+}
+
+task deployToJboss(type: Copy) {
+    from 'build/libs/CourtWebService.ear'
+    into JBOSS_HOME + '/standalone/deployments'
+}
+
+dependencies {
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'com.google.guava:guava:23.0'
+    compile 'com.google.code.findbugs:jsr305:3.0.2'
+
+    compile 'com.fasterxml.jackson.core:jackson-annotations:' + JACKSON_VERSION
+    compile 'com.fasterxml.jackson.core:jackson-databind:' + JACKSON_VERSION
+        
+    compile 'org.hibernate:hibernate-entitymanager:5.4.1.Final'
+	
+    providedCompile 'org.jboss.resteasy:resteasy-jaxrs:3.0.12.Final'
+    providedCompile 'org.jboss.resteasy:jaxrs-api:3.0.12.Final'
+    providedCompile 'org.jboss.resteasy:resteasy-jaxb-provider:3.0.12.Final'
+    
+    providedCompile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+
+    providedCompile 'javax.enterprise:cdi-api:2.0.SP1'
+
+    providedCompile group: 'javax', name: 'javaee-api', version: '8.0'
+    
+    compile 'com.google.auto.value:auto-value-annotations:1.6.3'
+    annotationProcessor 'com.google.auto.value:auto-value:1.6.3'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.hamcrest:hamcrest-library:2.1'
+    testCompile 'org.hsqldb:hsqldb:2.4.1'
+
+}
